@@ -37,7 +37,7 @@ for folder_name in folders:
     slug = slugify(country["name"])
     shutil.copyfile(svg, os.path.join(outdir, slug + ".svg"))
 
-    norm_name = re.sub(r"[\s\(\),']", "", country["name"])
+    norm_name = re.sub(r"[\s\(\),'-\.]", "", country["name"])
     import_statements.append(
         'import %sMap from "@peated/web/assets/countries/%s.svg";' % (norm_name, slug)
     )
@@ -47,7 +47,7 @@ for folder_name in folders:
         % (slug, norm_name)
     )
 
-print(
+script = (
     """
 import { type ComponentPropsWithoutRef } from "react";
       
@@ -63,10 +63,12 @@ export default function CountryMapIcon({
       return null;
   }
 }
-
 """
     % {
         "import_statements": "\n".join(import_statements),
         "case_statements": "\n".join(case_statements),
     }
-)
+).strip()
+
+with open(os.path.join(outdir, "component.tsx"), "w") as fp:
+    fp.write(script)
