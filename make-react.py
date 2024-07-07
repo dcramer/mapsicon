@@ -24,6 +24,7 @@ with open("all-countries.json", "rb") as fp:
 outdir = "dist"
 
 os.makedirs(outdir, 511, True)
+os.makedirs(os.path.join(outdir, "assets"), 511, True)
 
 folders = [x for x in os.listdir("all") if len(x) == 2]
 
@@ -45,13 +46,11 @@ for folder_name in folders:
 
     output_svg = input_svg.replace('fill="#000000"', 'fill="currentColor"')
 
-    with open(os.path.join(outdir, slug + ".svg"), "w") as fp:
+    with open(os.path.join(outdir, "assets", slug + ".svg"), "w") as fp:
         fp.write(output_svg)
 
     norm_name = replace_unicode(re.sub(r"[\s\(\),'-\.]", "", country["name"]))
-    import_statements.append(
-        'import %sMap from "@peated/web/assets/countries/%s.svg";' % (norm_name, slug)
-    )
+    import_statements.append('import %sMap from "./assets/%s.svg";' % (norm_name, slug))
     case_statements.append(
         """    case "%s":
        return <%sMap {...props} />;"""
@@ -81,5 +80,5 @@ export default function CountryMapIcon({
     }
 ).strip()
 
-with open(os.path.join(outdir, "component.tsx"), "w") as fp:
+with open(os.path.join(outdir, "index.tsx"), "w") as fp:
     fp.write(script)
