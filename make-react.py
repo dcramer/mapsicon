@@ -4,8 +4,13 @@ import re
 import json
 
 
+def replace_unicode(s):
+    # lazy
+    return s.replace("å", "a").replace("ô", "o").replace("ç", "c").replace("é", "e")
+
+
 def slugify(s):
-    s = s.lower().strip()
+    s = replace_unicode(s.lower().strip())
     s = re.sub(r"[^\w\s-]", "", s)
     s = re.sub(r"[\s_-]+", "-", s)
     s = re.sub(r"^-+|-+$", "", s)
@@ -43,7 +48,7 @@ for folder_name in folders:
     with open(os.path.join(outdir, slug + ".svg"), "w") as fp:
         fp.write(output_svg)
 
-    norm_name = re.sub(r"[\s\(\),'-\.]", "", country["name"])
+    norm_name = replace_unicode(re.sub(r"[\s\(\),'-\.]", "", country["name"]))
     import_statements.append(
         'import %sMap from "@peated/web/assets/countries/%s.svg";' % (norm_name, slug)
     )
