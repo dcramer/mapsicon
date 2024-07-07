@@ -35,7 +35,13 @@ for folder_name in folders:
         raise Exception("Cant find country: " + folder_name)
 
     slug = slugify(country["name"])
-    shutil.copyfile(svg, os.path.join(outdir, slug + ".svg"))
+    with open(svg) as fp:
+        input_svg = fp.read()
+
+    output_svg = input_svg.replace('fill="#000000"', 'fill="currentColor"')
+
+    with open(os.path.join(outdir, slug + ".svg"), "w") as fp:
+        fp.write(output_svg)
 
     norm_name = re.sub(r"[\s\(\),'-\.]", "", country["name"])
     import_statements.append(
