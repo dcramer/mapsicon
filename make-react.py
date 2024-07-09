@@ -40,7 +40,7 @@ for folder_name in folders:
     else:
         raise Exception("Cant find country: " + folder_name)
 
-    if country["alpha-2"] === "TW":
+    if country["alpha-2"] == "TW":
         country.update({
             "name": "Taiwan",
         })
