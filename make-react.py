@@ -40,12 +40,17 @@ for folder_name in folders:
     else:
         raise Exception("Cant find country: " + folder_name)
 
+    if country["alpha-2"] === "TW":
+        country.update({
+            "name": "Taiwan",
+        })
+    
     with open(svg) as fp:
         input_svg = fp.read()
 
     output_svg = input_svg.replace('fill="#000000"', 'fill="currentColor"')
 
-    slug = slugify(country["name"])
+    slug = slugify(country["name"])    
     if slug == "united-states-of-america":
         slug = "united-states"
     with open(os.path.join(outdir, "assets", slug + ".svg"), "w") as fp:
